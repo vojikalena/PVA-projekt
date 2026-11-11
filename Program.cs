@@ -40,7 +40,14 @@ namespace PVA_Projekt
         public int roundCount;
         public List<Round> rounds;
         public List<Player> players;
-
+        public Tournament(string name, string name2, int roundCount,List<Round> rounds,List<Player> players)
+        {
+            this.name = name;
+            this.name2 = name2;
+            this.roundCount = roundCount2;
+            this.rounds = rounds;
+            this.players = players;
+        }
 
     }
 
