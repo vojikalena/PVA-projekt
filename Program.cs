@@ -5,8 +5,7 @@ namespace PVA_Projekt
         public string nickname;
         public string name;
     }
-
-    public class Players
+     public class Players
     {
         
     }
@@ -53,9 +52,43 @@ namespace PVA_Projekt
             this.rounds = rounds;
             this.players = players;
         }
+        Tournament Create(){
+            Console.Write.Line("Jméno: ");
+            string name = ConsoleInput.Input();
+            Console.Write.Line("Disciplína: ");
+            string name2 = ConsoleInput.Input();
+            Console.Write.Line("Počet kol: ");
+            int roundCount = ConsoleInput.InputInt();
+
+            Tournament tournament = new(name, name2, roundCount, [],[]);
+            return tournament;
+        }
+    }
+    public class ConsoleInput{
+        string Input()
+        {
+            return Console.ReadLine();
+        }
+        int InputInt()
+        {
+            while (true)
+            {
+                string input = Console.WriteLine();
+                if(int.TryParse(input, out int input2))
+                {
+                    return input2;
+
+                }
+                else
+                {
+                    System.Console.WriteLine(":Neplatný vstup");
+                    continue;
+                }
+            }
+            
+        }
 
     }
-
     
     internal class Program
     {
