@@ -90,7 +90,7 @@ namespace PVA_Projekt
                 }
                 else
                 {
-                    Console.WriteLine("Neplatný vstup");
+                    ConsoleOutput.Output("Neplatný vstup");
                     continue;
                 }
             }
