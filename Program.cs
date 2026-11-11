@@ -1,0 +1,47 @@
+namespace PVA_Projekt
+{
+    public class Player
+    {
+
+    }
+
+    
+    public class Game
+    {
+        public Player player1;
+        public Player player2;
+        public int result;
+        public Game(Player player1, Player player2, int result)
+        {
+            this.player1 = player1;
+            this.player2 = player2;
+            this.result = result;
+        }
+
+    }
+    public class Round
+    {
+        public int number;
+        public Game[] games;
+        public bool opened;
+        public Round(int number, Game[] games, bool opened)
+        {
+            this.number = number;
+            this.games = games;
+            this.opened = opened;
+        }
+
+    }
+
+
+    
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            
+
+
+        }
+    }
+}
