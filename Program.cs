@@ -2,7 +2,8 @@ namespace PVA_Projekt
 {
     public class Player
     {
-
+        public string nickname;
+        public string name;
     }
 
     
