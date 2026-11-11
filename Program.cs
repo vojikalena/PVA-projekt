@@ -6,7 +6,6 @@ namespace PVA_Projekt
         public string name;
     }
 
-    
     public class Game
     {
         public Player player1;
@@ -20,6 +19,7 @@ namespace PVA_Projekt
         }
 
     }
+
     public class Round
     {
         public int number;
@@ -33,7 +33,16 @@ namespace PVA_Projekt
         }
 
     }
+    public class Tournament
+    {
+        public string name;
+        public string name2;
+        public int roundCount;
+        public List<Round> rounds;
+        public List<Player> players;
 
+
+    }
 
     
     internal class Program
