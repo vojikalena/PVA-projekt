@@ -5,9 +5,9 @@ namespace PVA_Projekt
         public string nickname;
         public string name;
     }
-     public class Players
+    public class Players
     {
-        
+
     }
 
     public class Game
@@ -44,57 +44,73 @@ namespace PVA_Projekt
         public int roundCount;
         public List<Round> rounds;
         public List<Player> players;
-        public Tournament(string name, string name2, int roundCount,List<Round> rounds,List<Player> players)
+        public Tournament(string name, string name2, int roundCount, List<Round> rounds, List<Player> players)
         {
             this.name = name;
             this.name2 = name2;
-            this.roundCount = roundCount2;
+            this.roundCount = roundCount;
             this.rounds = rounds;
             this.players = players;
         }
-        Tournament Create(){
-            Console.Write.Line("Jméno: ");
+        public static Tournament Create()
+        {
+            ConsoleOutput.Output("Jméno: ");
             string name = ConsoleInput.Input();
-            Console.Write.Line("Disciplína: ");
+            ConsoleOutput.Output("Disciplína: ");
             string name2 = ConsoleInput.Input();
-            Console.Write.Line("Počet kol: ");
+            ConsoleOutput.Output("Počet kol: ");
             int roundCount = ConsoleInput.InputInt();
 
-            Tournament tournament = new(name, name2, roundCount, [],[]);
+            Tournament tournament = new(name, name2, roundCount, [], []);
             return tournament;
         }
+        void AddPlayer(Tournament tournament)
+        {
+
+            
+        }
     }
-    public class ConsoleInput{
-        string Input()
+    public class ConsoleInput
+    {
+        public static string Input()
         {
             return Console.ReadLine();
         }
-        int InputInt()
+        public static int InputInt()
         {
             while (true)
             {
-                string input = Console.WriteLine();
-                if(int.TryParse(input, out int input2))
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out int input2))
                 {
                     return input2;
 
                 }
                 else
                 {
-                    System.Console.WriteLine(":Neplatný vstup");
+                    System.Console.WriteLine("Neplatný vstup");
                     continue;
                 }
             }
-            
+
         }
 
     }
-    
+    public class ConsoleOutput
+    {
+        public static void Output(string text)
+        {
+            Console.WriteLine(text);
+        }
+
+
+    }
+
     internal class Program
     {
         static void Main(string[] args)
         {
-            
+            Tournament.Create();
 
 
         }
