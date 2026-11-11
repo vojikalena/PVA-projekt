@@ -6,6 +6,11 @@ namespace PVA_Projekt
         public string name;
     }
 
+    public class Players
+    {
+        
+    }
+
     public class Game
     {
         public Player player1;
