@@ -64,10 +64,12 @@ namespace PVA_Projekt
             Tournament tournament = new(name, name2, roundCount, [], []);
             return tournament;
         }
-        void AddPlayer(Tournament tournament)
+        public void AddPlayer(Tournament tournament)
         {
-
-            
+            ConsoleOutput.Output("Přezdívka: ");
+            string name = ConsoleInput.Input();
+            Player player = new();
+            tournament.players.Add(player);
         }
     }
     public class ConsoleInput
@@ -88,7 +90,7 @@ namespace PVA_Projekt
                 }
                 else
                 {
-                    System.Console.WriteLine("Neplatný vstup");
+                    Console.WriteLine("Neplatný vstup");
                     continue;
                 }
             }
@@ -110,7 +112,7 @@ namespace PVA_Projekt
     {
         static void Main(string[] args)
         {
-            Tournament.Create();
+            //Tournament.Create();
 
 
         }
