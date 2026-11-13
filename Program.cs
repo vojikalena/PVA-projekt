@@ -54,22 +54,46 @@ namespace PVA_Projekt
         }
         public static Tournament Create()
         {
-            ConsoleOutput.Output("Jméno: ");
+            ConsoleOutput.Write("Jméno: ");
             string name = ConsoleInput.Input();
-            ConsoleOutput.Output("Disciplína: ");
+            ConsoleOutput.Write("Disciplína: ");
             string name2 = ConsoleInput.Input();
-            ConsoleOutput.Output("Počet kol: ");
+            ConsoleOutput.Write("Počet kol: ");
             int roundCount = ConsoleInput.InputInt();
 
             Tournament tournament = new(name, name2, roundCount, [], []);
             return tournament;
         }
-        public void AddPlayer(Tournament tournament)
+        public void AddPlayer()
         {
-            ConsoleOutput.Output("Přezdívka: ");
+            ConsoleOutput.Write("Přezdívka: ");
             string name = ConsoleInput.Input();
             Player player = new();
-            tournament.players.Add(player);
+            this.players.Add(player);
+        }
+        public void RemovePlayer()
+        {
+
+        }
+        public void NewRound()
+        {
+            try
+            {
+                if (rounds.Count < roundCount && rounds.Last().opened == false)
+                {
+
+                    rounds.Add(new(rounds.Count + 1, [], true));
+                }
+                else
+                {
+                    ConsoleOutput.Write("Nelze vytvořit další kolo.");
+                }
+            }
+            catch(Exception e)
+            {
+                rounds.Add(new(rounds.Count + 1, [], true));
+            }
+                
         }
     }
     public class ConsoleInput
@@ -90,17 +114,15 @@ namespace PVA_Projekt
                 }
                 else
                 {
-                    ConsoleOutput.Output("Neplatný vstup");
+                    ConsoleOutput.Write("Neplatný vstup");
                     continue;
                 }
             }
-
         }
-
     }
     public class ConsoleOutput
     {
-        public static void Output(string text)
+        public static void Write(string text)
         {
             Console.WriteLine(text);
         }
@@ -112,8 +134,9 @@ namespace PVA_Projekt
     {
         static void Main(string[] args)
         {
-            //Tournament.Create();
-
+            //Tournament test = Tournament.Create();
+            //test.NewRound();
+            
 
         }
     }
