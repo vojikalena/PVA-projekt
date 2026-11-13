@@ -93,7 +93,38 @@ namespace PVA_Projekt
             {
                 rounds.Add(new(rounds.Count + 1, [], true));
             }
-                
+
+            for (int i = 0; i < (players.Count() + 1)/2 ; i++)
+            {
+                rounds.Last().games.Append(new(new(), new(),0));
+            }
+            while (true)
+            {
+                int gameIndex;
+                Game game = new(new(),new(),0);
+                ConsoleOutput.List(rounds.Last().games);
+                int input = ConsoleInput.InputInt();
+                if (input > 0 && input <= rounds.Last().games.Count())
+                {
+                    gameIndex = input - 1;
+                }
+                else { continue; }
+                ConsoleOutput.List(players);
+                int input2 = ConsoleInput.InputInt();
+                if (input2 > 0 && input2 <= players.Count())
+                {
+                    game.player1 = players[input2 - 1];
+                }
+                else { continue; }
+                int input3 = ConsoleInput.InputInt();
+                if (input3 > 0 && input3 <= players.Count())
+                {
+                    game.player2 = players[input3 - 1];
+                }
+                else { continue; }
+                rounds.Last().games[gameIndex] = game;
+            }
+            
         }
     }
     public class ConsoleInput
@@ -126,7 +157,24 @@ namespace PVA_Projekt
         {
             Console.WriteLine(text);
         }
-
+        public static void List(Game[] games)
+        {
+            int i = 1;
+            foreach (Game g in games)
+            {
+                Console.WriteLine($"{i}. {g.player1.name} {g.result} {g.player2.name}");
+                i++;
+            }
+        }
+        public static void List(List<Player> players)
+        {
+            int i = 1;
+            foreach (Player p in players)
+            {
+                Console.WriteLine($"{i}. {p.name} ({p.nickname})");
+                i++;
+            }
+        }
 
     }
 
@@ -136,7 +184,7 @@ namespace PVA_Projekt
         {
             //Tournament test = Tournament.Create();
             //test.NewRound();
-            
+            //Console.WriteLine(rounds.Last().games.Count());
 
         }
     }
