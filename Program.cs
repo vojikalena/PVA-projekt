@@ -4,6 +4,11 @@ namespace PVA_Projekt
     {
         public string nickname;
         public string name;
+        public Player(string nickname, string name)
+        {
+            this.nickname = nickname;
+            this.name = name;
+        }
     }
     public class Players
     {
@@ -27,9 +32,9 @@ namespace PVA_Projekt
     public class Round
     {
         public int number;
-        public Game[] games;
+        public List<Game> games;
         public bool opened;
-        public Round(int number, Game[] games, bool opened)
+        public Round(int number, List<Game> games, bool opened)
         {
             this.number = number;
             this.games = games;
@@ -61,14 +66,14 @@ namespace PVA_Projekt
             ConsoleOutput.Write("Počet kol: ");
             int roundCount = ConsoleInput.InputInt();
 
-            Tournament tournament = new(name, name2, roundCount, [], []);
+            Tournament tournament = new(name, name2, roundCount, [], [new("test", "Test"),new("test2", "Test2")]);
             return tournament;
         }
         public void AddPlayer()
         {
             ConsoleOutput.Write("Přezdívka: ");
             string name = ConsoleInput.Input();
-            Player player = new();
+            Player player = new("","");
             this.players.Add(player);
         }
         public void RemovePlayer()
@@ -81,7 +86,6 @@ namespace PVA_Projekt
             {
                 if (rounds.Count < roundCount && rounds.Last().opened == false)
                 {
-
                     rounds.Add(new(rounds.Count + 1, [], true));
                 }
                 else
@@ -94,16 +98,23 @@ namespace PVA_Projekt
                 rounds.Add(new(rounds.Count + 1, [], true));
             }
 
-            for (int i = 0; i < (players.Count() + 1)/2 ; i++)
+            for (int i = 0; i < (players.Count + 1) ; i++)
             {
-                rounds.Last().games.Append(new(new(), new(),0));
+                rounds.Last().games.Add(new(new("",""), new("",""),0));
+            }
+            List<bool> playersRound = [];
+            foreach (Player p in players)
+            {
+                playersRound.Add(false);
             }
             while (true)
             {
                 int gameIndex;
-                Game game = new(new(),new(),0);
+                Game game = new(new("", ""),new("", ""),0);
+                
                 ConsoleOutput.List(rounds.Last().games);
                 int input = ConsoleInput.InputInt();
+                if (input == 0) { break; }
                 if (input > 0 && input <= rounds.Last().games.Count())
                 {
                     gameIndex = input - 1;
@@ -117,14 +128,30 @@ namespace PVA_Projekt
                 }
                 else { continue; }
                 int input3 = ConsoleInput.InputInt();
-                if (input3 > 0 && input3 <= players.Count())
+                if(input3 == 0)
+                {
+                    game.player2 = new("", "");
+                }
+                else if (input3 > 0 && input3 <= players.Count())
                 {
                     game.player2 = players[input3 - 1];
                 }
                 else { continue; }
+                if(game.player1.nickname == game.player2.nickname) { continue; }
+                if (playersRound[input2 - 1] == false)
+                {
+                    playersRound[input2 - 1] = true;
+                }
+                else { continue; }
+                if (playersRound[input3 - 1] == false)
+                {
+                    playersRound[input3 - 1] = true;
+                }
+                else { continue; }
                 rounds.Last().games[gameIndex] = game;
             }
-            
+            ConsoleOutput.Write($"{rounds.Last().number}. kolo - Zápasy:");
+            ConsoleOutput.List(rounds.Last().games);
         }
     }
     public class ConsoleInput
@@ -157,7 +184,7 @@ namespace PVA_Projekt
         {
             Console.WriteLine(text);
         }
-        public static void List(Game[] games)
+        public static void List(List<Game> games)
         {
             int i = 1;
             foreach (Game g in games)
@@ -175,6 +202,10 @@ namespace PVA_Projekt
                 i++;
             }
         }
+        public static void Clear()
+        {
+            Console.Clear();
+        }
 
     }
 
@@ -182,9 +213,9 @@ namespace PVA_Projekt
     {
         static void Main(string[] args)
         {
-            //Tournament test = Tournament.Create();
-            //test.NewRound();
-            //Console.WriteLine(rounds.Last().games.Count());
+            Tournament test = Tournament.Create();
+            test.NewRound();
+            
 
         }
     }
