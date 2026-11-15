@@ -49,13 +49,15 @@ namespace PVA_Projekt
         public int roundCount;
         public List<Round> rounds;
         public List<Player> players;
-        public Tournament(string name, string name2, int roundCount, List<Round> rounds, List<Player> players)
+        public int[] points;
+        public Tournament(string name, string name2, int roundCount, List<Round> rounds, List<Player> players, int[] points)
         {
             this.name = name;
             this.name2 = name2;
             this.roundCount = roundCount;
             this.rounds = rounds;
             this.players = players;
+            this.points = points;
         }
         public static Tournament Create()
         {
@@ -65,8 +67,13 @@ namespace PVA_Projekt
             string name2 = ConsoleInput.Input();
             ConsoleOutput.Write("Počet kol: ");
             int roundCount = ConsoleInput.InputInt();
-
-            Tournament tournament = new(name, name2, roundCount, [], [new("test", "Test"),new("test2", "Test2")]);
+            ConsoleOutput.Write("Body za výhru: ");
+            int winPoints = ConsoleInput.InputInt();
+            ConsoleOutput.Write("Body za remízu: ");
+            int drawPoints = ConsoleInput.InputInt();
+            ConsoleOutput.Write("Body za volný los: ");
+            int points = ConsoleInput.InputInt();
+            Tournament tournament = new(name, name2, roundCount, [], [new("test", "Test"),new("test2", "Test2")], [winPoints,drawPoints,points]);
             return tournament;
         }
         public void AddPlayer()
@@ -98,7 +105,7 @@ namespace PVA_Projekt
                 rounds.Add(new(rounds.Count + 1, [], true));
             }
 
-            for (int i = 0; i < (players.Count + 1) ; i++)
+            for (int i = 0; i < (players.Count + 1)/2 ; i++)
             {
                 rounds.Last().games.Add(new(new("",""), new("",""),0));
             }
@@ -150,9 +157,51 @@ namespace PVA_Projekt
                 else { continue; }
                 rounds.Last().games[gameIndex] = game;
             }
+            int j = 0;
+            foreach (bool item in playersRound)
+            {
+                if(item == false)
+                {
+                    rounds.Last().games.Add(new(players[j],new("v","v"),0));
+                }
+                j++;
+
+            }
             ConsoleOutput.Write($"{rounds.Last().number}. kolo - Zápasy:");
             ConsoleOutput.List(rounds.Last().games);
         }
+        public void SetResult()
+        {
+            while (true)
+            {
+                ConsoleOutput.Write("Vyber zápas: ");
+                ConsoleOutput.List(rounds.Last().games);
+                int input = ConsoleInput.InputInt();
+                if (input == 0) { break; }
+                if(input <= 0 || input > rounds.Last().games.Count)
+                {
+                    continue;
+                }
+                ConsoleOutput.Clear();
+                ConsoleOutput.Write($"{input}. {rounds.Last().games[input-1].player1.name} - {rounds.Last().games[input - 1].player2.name}");
+                ConsoleOutput.Write($"Výsledek: {rounds.Last().games[input - 1].result}");
+                ConsoleOutput.Write($"1 - Vyhrál bílý ({points[0]}:0)");
+                ConsoleOutput.Write($"2 - Vyhrál černý (0:{points[0]})");
+                ConsoleOutput.Write($"3 - Remíza ({points[1]}:{points[1]})");
+                int input2 = ConsoleInput.InputInt();
+                if (input2 <= 0 || input2 > 3)
+                {
+                    continue;
+                }
+                rounds.Last().games[input - 1].result = input2;
+            }
+            
+
+
+        }
+
+
+
     }
     public class ConsoleInput
     {
@@ -206,7 +255,26 @@ namespace PVA_Projekt
         {
             Console.Clear();
         }
+        public static void ResultToString(int result, int[] points)
+        {
+            if(result == 0)
+            {
+                Console.Write("0:0");
+            }
+            if (result == 1)
+            {
+                Console.Write($"{points[0]}:0");
+            }
+            if (result == 2)
+            {
+                Console.Write($"0:{points[0]}");
+            }
+            if (result == 3)
+            {
+                Console.Write($"{points[1]}:{points[1]}");
+            }
 
+        }
     }
 
     internal class Program
@@ -215,7 +283,7 @@ namespace PVA_Projekt
         {
             Tournament test = Tournament.Create();
             test.NewRound();
-            
+            test.SetResult();
 
         }
     }
