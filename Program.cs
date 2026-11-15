@@ -162,7 +162,7 @@ namespace PVA_Projekt
             {
                 if(item == false)
                 {
-                    rounds.Last().games.Add(new(players[j],new("v","v"),0));
+                    rounds.Last().games.Add(new(players[j],new("Volný los","Volný los"),4));
                 }
                 j++;
 
@@ -184,7 +184,7 @@ namespace PVA_Projekt
                 }
                 ConsoleOutput.Clear();
                 ConsoleOutput.Write($"{input}. {rounds.Last().games[input-1].player1.name} - {rounds.Last().games[input - 1].player2.name}");
-                ConsoleOutput.Write($"Výsledek: {rounds.Last().games[input - 1].result}");
+                ConsoleOutput.Write($"Výsledek: {ConsoleOutput.ResultToString(rounds.Last().games[input - 1].result)}");
                 ConsoleOutput.Write($"1 - Vyhrál bílý ({points[0]}:0)");
                 ConsoleOutput.Write($"2 - Vyhrál černý (0:{points[0]})");
                 ConsoleOutput.Write($"3 - Remíza ({points[1]}:{points[1]})");
@@ -196,10 +196,26 @@ namespace PVA_Projekt
                 rounds.Last().games[input - 1].result = input2;
             }
             
+        }
+        public void CloseRound()
+        {
+            while (true)
+            {
+                foreach (Game g in rounds.Last().games)
+                {
+                    if (g.result == 0)
+                    {
+                        ConsoleOutput.Write("Chybí výsledky zápasů");
+                        break;
+                    }
+                }
+                rounds.Last().opened = false;
+                ConsoleOutput.Write("Kolo úspěšně uzavřeno");
 
+            }
+           
 
         }
-
 
 
     }
@@ -238,7 +254,7 @@ namespace PVA_Projekt
             int i = 1;
             foreach (Game g in games)
             {
-                Console.WriteLine($"{i}. {g.player1.name} {g.result} {g.player2.name}");
+                Console.WriteLine($"{i}. {g.player1.name} {ResultToString(g.result)} {g.player2.name}");
                 i++;
             }
         }
@@ -255,25 +271,29 @@ namespace PVA_Projekt
         {
             Console.Clear();
         }
-        public static void ResultToString(int result, int[] points)
+        public static string ResultToString(int result)
         {
             if(result == 0)
             {
-                Console.Write("0:0");
+                return "0:0";
             }
-            if (result == 1)
+            else if (result == 1)
             {
-                Console.Write($"{points[0]}:0");
+                return "3:0";
             }
-            if (result == 2)
+            else if (result == 2)
             {
-                Console.Write($"0:{points[0]}");
+                return "0:3";
             }
-            if (result == 3)
+            else if (result == 3)
             {
-                Console.Write($"{points[1]}:{points[1]}");
+                return "1:1";
             }
-
+            else if (result == 4)
+            {
+                return "1:0";
+            }
+            else { return "?"; }
         }
     }
 
