@@ -1,25 +1,95 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace PVA_Projekt
 {
     public class Player
     {
         public string nickname;
         public string name;
-<<<<<<< HEAD
+
         public Player(string nickname, string name)
         {
             this.nickname = nickname;
             this.name = name;
         }
-=======
->>>>>>> parent of a362f4c (hraci, pridavani odebirani atd)
     }
     public class Players
     {
-<<<<<<< HEAD
+        private List<Player> players = new List<Player>();
 
-=======
-        
->>>>>>> parent of a362f4c (hraci, pridavani odebirani atd)
+
+        public bool AddPlayer(string name, string nickname)
+        {
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(nickname))
+            {
+                Console.WriteLine("Jméno ani přezdívka nesmí být prázdné.");
+                return false;
+            }
+
+            foreach (Player p in players)
+            {
+                if (p.nickname.Equals(nickname, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine($"Přezdívka '{nickname}' už existuje, hráč nebyl přidán.");
+                    return false;
+                }
+            }
+
+            players.Add(new Player(nickname, name));
+            Console.WriteLine($"Hráč {name} ({nickname}) byl přidán.");
+            return true;
+        }
+
+
+        public void PrintPlayers()
+        {
+            if (players.Count == 0)
+            {
+                Console.WriteLine("Seznam hráčů je prázdný.");
+                return;
+            }
+
+            Console.WriteLine("Seznam hráčů:");
+            foreach (Player p in players)
+            {
+                Console.WriteLine($"- {p.name} (přezdívka: {p.nickname})");
+            }
+        }
+
+
+        public bool RemovePlayer(string nickname, List<Game> playedGames)
+        {
+            Player found = null;
+            foreach (Player p in players)
+            {
+                if (p.nickname.Equals(nickname, StringComparison.OrdinalIgnoreCase))
+                {
+                    found = p;
+                    break;
+                }
+            }
+
+            if (found == null)
+            {
+                Console.WriteLine($"Hráč s přezdívkou '{nickname}' neexistuje.");
+                return false;
+            }
+
+            foreach (Game g in playedGames)
+            {
+                if (g.player1 == found || g.player2 == found)
+                {
+                    Console.WriteLine($"Hráče '{nickname}' nelze odebrat, protože už odehrál zápas.");
+                    return false;
+                }
+            }
+
+            players.Remove(found);
+            Console.WriteLine($"Hráč '{nickname}' byl odebrán.");
+            return true;
+        }
     }
 
     public class Game
@@ -377,6 +447,60 @@ namespace PVA_Projekt
                 ConsoleOutput.Write($"Turnaj se nepodařilo uložit: {e.Message}");
             }
 
+        }
+    }
+    
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Players seznam = new Players();
+            List<Game> odehraneZapasy = new List<Game>(); 
+            bool bezi = true;
+
+         
+            while (bezi)
+            {
+                Console.WriteLine();
+                Console.WriteLine("=== MENU ===");
+                Console.WriteLine("1 - Přidat hráče");
+                Console.WriteLine("2 - Vypsat hráče");
+                Console.WriteLine("3 - Odebrat hráče");
+                Console.WriteLine("0 - Konec");
+                Console.Write("Volba: ");
+
+                string volba = Console.ReadLine();
+
+                switch (volba)
+                {
+                    case "1":
+                        Console.Write("Jméno: ");
+                        string jmeno = Console.ReadLine();
+                        Console.Write("Přezdívka: ");
+                        string prezdivka = Console.ReadLine();
+                        seznam.AddPlayer(jmeno, prezdivka);
+                        break;
+
+                    case "2":
+                        seznam.PrintPlayers();
+                        break;
+
+                    case "3":
+                        Console.Write("Přezdívka hráče k odebrání: ");
+                        string odebrat = Console.ReadLine();
+                        seznam.RemovePlayer(odebrat, odehraneZapasy);
+                        break;
+
+                    case "0":
+                        bezi = false;
+                        Console.WriteLine("Program se ukončuje.");
+                        break;
+
+                    default:
+                        Console.WriteLine("Neplatná volba, zkus to znovu.");
+                        break;
+                }
+            }
         }
     }
 }
