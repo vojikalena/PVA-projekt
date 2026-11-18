@@ -8,6 +8,7 @@ namespace PVA_Projekt
     {
         public string nickname;
         public string name;
+
         public Player(string nickname, string name)
         {
             this.nickname = nickname;
@@ -151,7 +152,7 @@ namespace PVA_Projekt
             Tournament tournament = new(name, name2, roundCount, [], [new("test", "Test"), new("test2", "Test2")], [winPoints, drawPoints, points]);
             return tournament;
         }
-        /*public void AddPlayer()
+        public void AddPlayer()
         {
             ConsoleOutput.Write("Přezdívka: ");
             string name = ConsoleInput.Input();
@@ -161,7 +162,7 @@ namespace PVA_Projekt
         public void RemovePlayer()
         {
 
-        }*/
+        }
         public void NewRound()
         {
             try
