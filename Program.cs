@@ -4,11 +4,26 @@ namespace PVA_Projekt
     {
         public string nickname;
         public string name;
+
+        public Player(nickname, name)
+        {
+            this.nickname = nickname;
+            this.name = name;
+        }
     }
 
     public class Players
     {
-        
+        private List<Players> Players = new List<Players>();
+        public void AddPlayer(string name, string nickname)
+        {
+            foreach (i in Players )
+            {
+                
+            }
+            Players.Add(name, nickname);
+            
+        }
     }
 
     public class Game
