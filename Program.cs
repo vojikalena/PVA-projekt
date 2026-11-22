@@ -147,7 +147,7 @@ namespace PVA_Projekt
             int drawPoints = ConsoleInput.InputInt(0, 100);
             ConsoleOutput.Write("Body za volný los: ");
             int points = ConsoleInput.InputInt(0, 100);
-            Tournament tournament = new(name, name2, roundCount, [], [new("test", "Test"), new("test2", "Test2")], [winPoints, drawPoints, points]);
+            Tournament tournament = new(name, name2, roundCount, [], [], [winPoints, drawPoints, points]);
             return tournament;
         }
         public void AddPlayer(Players seznam)
@@ -399,27 +399,6 @@ namespace PVA_Projekt
     }
     public class ConsoleInput
     {
-        /*public static string Input()
-        {
-            return Console.ReadLine();
-        }
-        public static int InputInt()
-        {
-            while (true)
-            {
-                string input = Console.ReadLine();
-                if (int.TryParse(input, out int input2))
-                {
-                    return input2;
-                }
-                else
-                {
-                    ConsoleOutput.Write("Neplatný vstup");
-                    continue;
-                }
-            }
-        }*/
-
         // Přečte řádek; při konci vstupu (Ctrl+D / Ctrl+Z) program čistě skončí,
         // aby se nezacyklil.
         private static string ReadLineOrExit()
@@ -523,7 +502,6 @@ namespace PVA_Projekt
             }
             else { return "?"; }
         }
-
         public static void Standings(List<(Player player, int points, int played)> table)
         {
             if (table.Count == 0)
@@ -531,7 +509,6 @@ namespace PVA_Projekt
                 Write("Žádní přihlášení hráči.");
                 return;
             }
-
             Console.WriteLine("Pořadí".PadRight(8) + "Hráč".PadRight(30) + "Body".PadLeft(6) + "Zápasy".PadLeft(8));
             int rank = 1;
             for (int i = 0; i < table.Count; i++)
@@ -555,7 +532,7 @@ namespace PVA_Projekt
             string saveFile = "tournament.trn";
             while (bezi)
             {
-                Console.WriteLine();
+                Console.WriteLine("\n");
                 ConsoleOutput.Write("=== MENU ===");
                 ConsoleOutput.Write("1 - Přidat hráče");
                 ConsoleOutput.Write("2 - Vypsat hráče");
@@ -596,10 +573,6 @@ namespace PVA_Projekt
 
                     case "4":
                         ConsoleOutput.Clear();
-                        ConsoleOutput.Write("Nacist/vytvorit");
-                        //string saveFile = "tournament.trn";
-                        //Tournament tournament;
-
                         ConsoleOutput.Write("Načíst uložený turnaj? (a/n)");
                         string answer = ConsoleInput.InputText();
                         if (answer.Trim().ToLower() == "a")
@@ -631,6 +604,7 @@ namespace PVA_Projekt
                         }
                         else
                         {
+                            ConsoleOutput.Clear();
                             tournament = Tournament.Create();
                         }
                         break;
@@ -692,20 +666,76 @@ namespace PVA_Projekt
                         break;
 
                     case "7":
-                        tournament.ShowStandings();
+                        ConsoleOutput.Clear();
+                        if(tournament.roundCount == 0)
+                        {
+                            ConsoleOutput.Write("Nebyl vytvořen žádný turnaj");
+                            break;
+                        }
+                        else
+                        {
+                            ConsoleOutput.Write($"{tournament.name} - {tournament.name2}");
+                            tournament.ShowStandings();
+                        }
+                        
                         break;
 
                     case "8":
-                        
-                        tournament.NewRound();
+                        ConsoleOutput.Clear();
+                        if (tournament.roundCount == 0)
+                        {
+                            ConsoleOutput.Write("Nebyl vytvořen žádný turnaj");
+                            break;
+                        }
+                        else if (seznam.players.Count == 0)
+                        {
+                            ConsoleOutput.Write("Žádní přihlášení hráči");
+                            break;
+                        }
+                        else
+                        {
+                            tournament.NewRound();
+                        }
                         break;
 
                     case "9":
-                        tournament.SetResult();
+                        ConsoleOutput.Clear();
+                        if (tournament.roundCount == 0)
+                        {
+                            ConsoleOutput.Write("Nebyl vytvořen žádný turnaj");
+                            break;
+                        }
+                        else if(tournament.rounds.Count == 0)
+                        {
+                            ConsoleOutput.Write("Nebylo vytvořeno žádné kolo");
+                            break;
+                        }
+                        else
+                        {
+                            tournament.SetResult();
+                        }
                         break;
 
                     case "0":
                         bezi = false;
+                        ConsoleOutput.Write("Uložit turnaj před ukončením? (a/n)");
+                        string input2 = ConsoleInput.InputText();
+                        if(input2 == "a")
+                        {
+                            try
+                            {
+                                TournamentStorage.Save(tournament, saveFile);
+                                ConsoleOutput.Write($"Turnaj byl uložen do souboru {saveFile}.");
+                            }
+                            catch (IOException e)
+                            {
+                                ConsoleOutput.Write($"Turnaj se nepodařilo uložit: {e.Message}");
+                            }
+                            catch (InvalidOperationException e)
+                            {
+                                ConsoleOutput.Write($"Turnaj se nepodařilo uložit: {e.Message}");
+                            }
+                        }
                         ConsoleOutput.Write("Program se ukončuje.");
                         break;
 

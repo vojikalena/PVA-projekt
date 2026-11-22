@@ -1,12 +1,12 @@
 namespace PVA_Projekt
 {
-    
+
     public class TournamentStorage
     {
-       
+
         public static void Save(Tournament tournament, string fileName)
         {
-        
+
             List<string> lines = new()
             {
                 "TRN;2",
@@ -23,7 +23,6 @@ namespace PVA_Projekt
                 lines.Add($"HRAC;{id};{player.nickname};{player.name}");
             }
 
-           
             foreach (Round round in tournament.rounds)
             {
                 int opened = round.opened ? 1 : 0;
@@ -53,7 +52,6 @@ namespace PVA_Projekt
             File.WriteAllLines(fileName, lines);
         }
 
-       
         public static Tournament Load(string fileName)
         {
             if (!File.Exists(fileName))
@@ -83,19 +81,18 @@ namespace PVA_Projekt
                 throw new InvalidDataException("Počet kol nebo bodování není platné číslo.");
             }
 
-          
-            List<Player> players = new();
-            Dictionary<int, Player> playerIds = new();
-            List<Round> rounds = new();
+            List<Player> players = [];
+            Dictionary<int, Player> playerIds = [];
+            List<Round> rounds = [];
             Round currentRound = null;
 
-           
+
             for (int i = 3; i < lines.Length; i++)
             {
                 string[] fields = lines[i].Split(';');
                 if (fields[0] == "HRAC")
                 {
-                   
+
                     if (fields.Length != 4 || !int.TryParse(fields[1], out int id))
                     {
                         throw new InvalidDataException($"Neplatný hráč na řádku {i + 1}.");
@@ -106,7 +103,7 @@ namespace PVA_Projekt
                 }
                 else if (fields[0] == "KOLO")
                 {
-                    
+
                     if (fields.Length != 3 || !int.TryParse(fields[1], out int number) ||
                         (fields[2] != "0" && fields[2] != "1"))
                     {
@@ -117,7 +114,7 @@ namespace PVA_Projekt
                 }
                 else if (fields[0] == "ZAPAS")
                 {
-                    
+
                     if (fields.Length != 4 || currentRound == null ||
                         !int.TryParse(fields[1], out int firstId) ||
                         !playerIds.TryGetValue(firstId, out Player firstPlayer))
