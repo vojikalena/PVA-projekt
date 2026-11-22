@@ -17,8 +17,7 @@ namespace PVA_Projekt
     }
     public class Players
     {
-        private List<Player> players = new List<Player>();
-
+        public List<Player> players = new List<Player>();
 
         public bool AddPlayer(string name, string nickname)
         {
@@ -138,30 +137,82 @@ namespace PVA_Projekt
         public static Tournament Create()
         {
             ConsoleOutput.Write("Jméno: ");
-            string name = ConsoleInput.Input();
+            string name = ConsoleInput.InputText();
             ConsoleOutput.Write("Disciplína: ");
-            string name2 = ConsoleInput.Input();
+            string name2 = ConsoleInput.InputText();
             ConsoleOutput.Write("Počet kol: ");
-            int roundCount = ConsoleInput.InputInt();
+            int roundCount = ConsoleInput.InputInt(1, 100);
             ConsoleOutput.Write("Body za výhru: ");
-            int winPoints = ConsoleInput.InputInt();
+            int winPoints = ConsoleInput.InputInt(0, 100);
             ConsoleOutput.Write("Body za remízu: ");
-            int drawPoints = ConsoleInput.InputInt();
+            int drawPoints = ConsoleInput.InputInt(0, 100);
             ConsoleOutput.Write("Body za volný los: ");
-            int points = ConsoleInput.InputInt();
+            int points = ConsoleInput.InputInt(0, 100);
             Tournament tournament = new(name, name2, roundCount, [], [new("test", "Test"), new("test2", "Test2")], [winPoints, drawPoints, points]);
             return tournament;
         }
-        public void AddPlayer()
+        public void AddPlayer(Players seznam)
         {
             ConsoleOutput.Write("Přezdívka: ");
-            string name = ConsoleInput.Input();
-            Player player = new("","");
-            this.players.Add(player);
+            string nickname = ConsoleInput.InputText();
+            bool playerExists = false;
+            string playerName = "";
+            foreach (Player p in seznam.players)
+            {
+                if (nickname == p.nickname)
+                {
+                    playerExists = true;
+                    playerName = p.name;
+                    break;
+                }
+            }
+            if (playerExists)
+            {
+                foreach (Player p in players)
+                {
+                    if (nickname == p.nickname)
+                    {
+                        playerExists = false;
+                    }
+                }
+                if (playerExists)
+                {
+                    Player player = new(nickname, playerName);
+                    ConsoleOutput.Write($"Hráč {nickname} byl přihlášen");
+                    players.Add(player);
+                }
+                else
+                {
+                    ConsoleOutput.Write("Hráč už je přihlášený");
+                }
+            }
+            else
+            {
+                ConsoleOutput.Write("Hráč neexistuje");
+            }
         }
         public void RemovePlayer()
         {
-
+            ConsoleOutput.Write("Přezdívka: ");
+            string nickname = ConsoleInput.InputText();
+            bool playerExists = false;
+            foreach (Player p in players)
+            {
+                if (nickname == p.nickname)
+                {
+                    players.Remove(p);
+                    playerExists = true;
+                    break;
+                }
+            }
+            if (playerExists)
+            {
+                ConsoleOutput.Write($"Hráč {nickname} byl odhlášen");
+            }
+            else
+            {
+                ConsoleOutput.Write("Hráč neexistuje");
+            }
         }
         public void NewRound()
         {
@@ -174,6 +225,7 @@ namespace PVA_Projekt
                 else
                 {
                     ConsoleOutput.Write("Nelze vytvořit další kolo.");
+                    return;
                 }
             }
             catch (Exception e)
@@ -181,12 +233,12 @@ namespace PVA_Projekt
                 rounds.Add(new(rounds.Count + 1, [], true));
             }
 
-            for (int i = 0; i < (players.Count + 1) / 2; i++)
+            for (int i = 0; i < (players.Count ) / 2; i++)
             {
-                Player p1 = players[i * 2];
-                Player p2 = players[i * 2 + 1];
-                //rounds.Last().games.Add(new(new("",""), new("",""),0));
-                rounds.Last().games.Add(new(new(p1.nickname, p1.name), new(p2.nickname, p2.name), 0));
+                //Player p1 = players[i * 2];
+                //Player p2 = players[i * 2 + 1];
+                rounds.Last().games.Add(new(new("",""), new("",""),0));
+                //rounds.Last().games.Add(new(new(p1.nickname, p1.name), new(p2.nickname, p2.name), 0));
             }
             List<bool> playersRound = [];
             foreach (Player p in players)
@@ -199,7 +251,7 @@ namespace PVA_Projekt
                 Game game = new(new("", ""), new("", ""), 0);
 
                 ConsoleOutput.List(rounds.Last().games, points);
-                int input = ConsoleInput.InputInt();
+                int input = ConsoleInput.InputInt(0, rounds.Last().games.Count);
 
                 if (input == 0) { break; }
                 if (input > 0 && input <= rounds.Last().games.Count())
@@ -208,13 +260,13 @@ namespace PVA_Projekt
                 }
                 else { continue; }
                 ConsoleOutput.List(players);
-                int input2 = ConsoleInput.InputInt();
+                int input2 = ConsoleInput.InputInt(0, players.Count);
                 if (input2 > 0 && input2 <= players.Count())
                 {
                     game.player1 = players[input2 - 1];
                 }
                 else { continue; }
-                int input3 = ConsoleInput.InputInt();
+                int input3 = ConsoleInput.InputInt(0, players.Count);
                 if (input3 == 0)
                 {
                     game.player2 = new("", "");
@@ -245,8 +297,8 @@ namespace PVA_Projekt
                     rounds.Last().games.Add(new(players[j], new("Volný los", "Volný los"), 4));
                 }
                 j++;
-
             }
+            ConsoleOutput.Clear();
             ConsoleOutput.Write($"{rounds.Last().number}. kolo - Zápasy:");
             ConsoleOutput.List(rounds.Last().games, points);
         }
@@ -256,7 +308,7 @@ namespace PVA_Projekt
             {
                 ConsoleOutput.Write("Vyber zápas: ");
                 ConsoleOutput.List(rounds.Last().games, points);
-                int input = ConsoleInput.InputInt();
+                int input = ConsoleInput.InputInt(0, rounds.Last().games.Count);
                 if (input == 0) { break; }
                 if (input <= 0 || input > rounds.Last().games.Count)
                 {
@@ -274,39 +326,85 @@ namespace PVA_Projekt
                 ConsoleOutput.Write($"1 - Vyhrál bílý ({points[0]}:0)");
                 ConsoleOutput.Write($"2 - Vyhrál černý (0:{points[0]})");
                 ConsoleOutput.Write($"3 - Remíza ({points[1]}:{points[1]})");
-                int input2 = ConsoleInput.InputInt();
+                int input2 = ConsoleInput.InputInt(0, 3);
                 if (input2 <= 0 || input2 > 3)
                 {
                     continue;
                 }
                 rounds.Last().games[input - 1].result = input2;
-            }
+                ShowStandings();
+                
 
+            }
+            ConsoleOutput.Write("Uzavřít kolo? (a/n)");
+            string input3 = ConsoleInput.InputText();
+            if (input3 == "a")
+            {
+                CloseRound();
+            }
+            else
+            {   }
         }
         public void CloseRound()
         {
-            while (true)
+            //while (true)
+            
+            foreach (Game g in rounds.Last().games)
             {
-                foreach (Game g in rounds.Last().games)
+                if (g.result == 0)
                 {
-                    if (g.result == 0)
+                    ConsoleOutput.Write("Chybí výsledky zápasů");
+                    break;
+                }
+            }
+            rounds.Last().opened = false;
+            ConsoleOutput.Write("Kolo úspěšně uzavřeno");            
+        }
+
+        public List<(Player player, int points, int played)> GetStandings()
+        {
+            int[] pt = points.Length >= 3 ? points : [0, 0, 0];
+            List<(Player player, int points, int played)> table = [];
+
+            foreach (Player p in players)
+            {
+                int sum = 0;
+                int played = 0;
+                foreach (Round r in rounds)
+                {
+                    foreach (Game g in r.games)
                     {
-                        ConsoleOutput.Write("Chybí výsledky zápasů");
-                        break;
+                        if (g.result == 0) { continue; }   // zápas bez výsledku se nepočítá
+                        bool isP1 = g.player1.nickname == p.nickname;
+                        bool isP2 = g.player2.nickname == p.nickname;
+                        if (!isP1 && !isP2) { continue; }
+
+                        if (g.result == 4)                 // volný los
+                        {
+                            if (isP1) { sum += pt[2]; }
+                            continue;
+                        }
+
+                        played++;
+                        if (g.result == 3) { sum += pt[1]; }
+                        else if ((g.result == 1 && isP1) || (g.result == 2 && isP2)) { sum += pt[0]; }
                     }
                 }
-                rounds.Last().opened = false;
-                ConsoleOutput.Write("Kolo úspěšně uzavřeno");
-
+                table.Add((p, sum, played));
             }
 
+            return table.OrderByDescending(t => t.points).ThenBy(t => t.player.name).ToList();
+        }
 
+        public void ShowStandings()
+        {
+            ConsoleOutput.Standings(GetStandings());
         }
 
     }
     public class ConsoleInput
     {
-        public static string Input()
+        /*public static string Input()
         {
             return Console.ReadLine();
         }
@@ -318,13 +416,63 @@ namespace PVA_Projekt
                 if (int.TryParse(input, out int input2))
                 {
                     return input2;
-
                 }
                 else
                 {
                     ConsoleOutput.Write("Neplatný vstup");
                     continue;
                 }
+            }
+        }*/
+
+        // Přečte řádek; při konci vstupu (Ctrl+D / Ctrl+Z) program čistě skončí,
+        // aby se nezacyklil.
+        private static string ReadLineOrExit()
+        {
+            string line = Console.ReadLine();
+            if (line == null)
+            {
+                Environment.Exit(0);
+            }
+            return line;
+        }
+
+        // Neprázdný text. Po chybě se zeptá znovu.
+        public static string InputText()
+        {
+            while (true)
+            {
+                string input = ReadLineOrExit();
+                if (!string.IsNullOrWhiteSpace(input))
+                {
+                    return input.Trim();
+                }
+                ConsoleOutput.Write("Vstup nesmí být prázdný, zkus to znovu.");
+            }
+        }
+
+        // Celé číslo v rozsahu <min, max>. Po chybě se zeptá znovu.
+        public static int InputInt(int min, int max)
+        {
+            while (true)
+            {
+                string input = ReadLineOrExit();
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    ConsoleOutput.Write("Vstup nesmí být prázdný, zadej číslo.");
+                    continue;
+                }
+                if (!int.TryParse(input, out int value))
+                {
+                    ConsoleOutput.Write("Neplatný vstup, zadej celé číslo.");
+                    continue;
+                }
+                if (value < min || value > max)
+                {
+                    ConsoleOutput.Write($"Číslo musí být v rozsahu {min} až {max}.");
+                    continue;
+                }
+                return value;
             }
         }
     }
@@ -379,9 +527,28 @@ namespace PVA_Projekt
             }
             else if (result == 4)
             {
-                return "1:0";
+                return $"{points[2]}:0";
             }
             else { return "?"; }
+        }
+
+        public static void Standings(List<(Player player, int points, int played)> table)
+        {
+            if (table.Count == 0)
+            {
+                Write("Žádní přihlášení hráči.");
+                return;
+            }
+
+            Console.WriteLine("Pořadí".PadRight(8) + "Hráč".PadRight(30) + "Body".PadLeft(6) + "Zápasy".PadLeft(8));
+            int rank = 1;
+            for (int i = 0; i < table.Count; i++)
+            {
+                if (i > 0 && table[i].points != table[i - 1].points) { rank = i + 1; }
+                string who = $"{table[i].player.name} ({table[i].player.nickname})";
+                Console.WriteLine((rank + ".").PadRight(8) + who.PadRight(30)
+                    + table[i].points.ToString().PadLeft(6) + table[i].played.ToString().PadLeft(8));
+            }
         }
     }
     /*
@@ -445,7 +612,6 @@ namespace PVA_Projekt
             {
                 ConsoleOutput.Write($"Turnaj se nepodařilo uložit: {e.Message}");
             }
-
         }
     }*/
     internal class Program
@@ -460,44 +626,52 @@ namespace PVA_Projekt
             while (bezi)
             {
                 Console.WriteLine();
-                Console.WriteLine("=== MENU ===");
-                Console.WriteLine("1 - Přidat hráče");
-                Console.WriteLine("2 - Vypsat hráče");
-                Console.WriteLine("3 - Odebrat hráče");
-                Console.WriteLine("4 - Načíst/vytvořit turnaj");
-                Console.WriteLine("5 - Uložit turnaj");
-                Console.WriteLine("0 - Konec");
+                ConsoleOutput.Write("=== MENU ===");
+                ConsoleOutput.Write("1 - Přidat hráče");
+                ConsoleOutput.Write("2 - Vypsat hráče");
+                ConsoleOutput.Write("3 - Odebrat hráče");
+                ConsoleOutput.Write("4 - Načíst/vytvořit turnaj");
+                ConsoleOutput.Write("5 - Uložit turnaj");
+                ConsoleOutput.Write("6 - Přihlásit/odhlásit hráče");
+                ConsoleOutput.Write("7 - Zobrazit pořadí");
+                ConsoleOutput.Write("8 - Vytvořit nové kolo");
+                ConsoleOutput.Write("9 - Zapsat výsledky");
+                ConsoleOutput.Write("0 - Konec");
                 Console.Write("Volba: ");
 
-                string volba = Console.ReadLine();
-                
+                string volba = ConsoleInput.InputText();
+
                 switch (volba)
                 {
                     case "1":
+                        ConsoleOutput.Clear();
                         Console.Write("Jméno: ");
-                        string jmeno = Console.ReadLine();
+                        string jmeno = ConsoleInput.InputText();
                         Console.Write("Přezdívka: ");
-                        string prezdivka = Console.ReadLine();
+                        string prezdivka = ConsoleInput.InputText();
                         seznam.AddPlayer(jmeno, prezdivka);
                         break;
 
                     case "2":
+                        ConsoleOutput.Clear();
                         seznam.PrintPlayers();
                         break;
 
                     case "3":
+                        ConsoleOutput.Clear();
                         Console.Write("Přezdívka hráče k odebrání: ");
-                        string odebrat = Console.ReadLine();
+                        string odebrat = ConsoleInput.InputText();
                         seznam.RemovePlayer(odebrat, odehraneZapasy);
                         break;
 
                     case "4":
-                        Console.WriteLine("Nacist/vytvorit");
+                        ConsoleOutput.Clear();
+                        ConsoleOutput.Write("Nacist/vytvorit");
                         //string saveFile = "tournament.trn";
                         //Tournament tournament;
 
                         ConsoleOutput.Write("Načíst uložený turnaj? (a/n)");
-                        string answer = ConsoleInput.Input();
+                        string answer = ConsoleInput.InputText();
                         if (answer.Trim().ToLower() == "a")
                         {
                             try
@@ -509,7 +683,7 @@ namespace PVA_Projekt
                             {
                                 ConsoleOutput.Write($"Soubor {saveFile} nebyl nalezen.");
                                 ConsoleOutput.Write("Chcete vytvořit nový turnaj? (a/n)");
-                                string newTournamentAnswer = ConsoleInput.Input();
+                                string newTournamentAnswer = ConsoleInput.InputText();
                                 if (newTournamentAnswer.Trim().ToLower() == "a")
                                 {
                                     tournament = Tournament.Create();
@@ -532,7 +706,7 @@ namespace PVA_Projekt
                         break;
 
                     case "5":
-                        
+
                         try
                         {
                             TournamentStorage.Save(tournament, saveFile);
@@ -547,6 +721,57 @@ namespace PVA_Projekt
                             ConsoleOutput.Write($"Turnaj se nepodařilo uložit: {e.Message}");
                         }
                         break;
+
+                    case "6":
+                        ConsoleOutput.Clear();
+                        bool quit = false;
+                        while (!quit)
+                        {
+                            ConsoleOutput.Write("0 - Zpět");
+                            ConsoleOutput.Write("1 - Přihlásit hráče");
+                            ConsoleOutput.Write("2 - Odhlásit hráče");
+                            ConsoleOutput.Write("3 - vypsat přihlášené hráče");
+                            string input = ConsoleInput.InputText();
+                            switch (input)
+                            {
+                                case "0":
+                                    quit = true;
+                                    break;
+
+                                case "1":
+                                    ConsoleOutput.Clear();
+                                    tournament.AddPlayer(seznam);
+                                    break;
+
+                                case "2":
+                                    ConsoleOutput.Clear();
+                                    tournament.RemovePlayer();
+                                    break;
+
+                                case "3":
+                                    ConsoleOutput.Clear();
+                                    ConsoleOutput.List(tournament.players);
+                                    break;
+
+                            }
+
+                        }
+                        ConsoleOutput.Clear();
+                        break;
+
+                    case "7":
+                        tournament.ShowStandings();
+                        break;
+
+                    case "8":
+                        
+                        tournament.NewRound();
+                        break;
+
+                    case "9":
+                        tournament.SetResult();
+                        break;
+
                     case "0":
                         bezi = false;
                         Console.WriteLine("Program se ukončuje.");
