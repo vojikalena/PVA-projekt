@@ -248,10 +248,10 @@ namespace PVA_Projekt
             {
                 int gameIndex;
                 Game game = new(new("", ""), new("", ""), 0);
-
+                ConsoleOutput.Write("Vyber zápas: ");
+                ConsoleOutput.Write("0 - Konec");
                 ConsoleOutput.List(rounds.Last().games, points);
                 int input = ConsoleInput.InputInt(0, rounds.Last().games.Count);
-
                 if (input == 0) { break; }
                 if (input > 0 && input <= rounds.Last().games.Count())
                 {
@@ -297,6 +297,13 @@ namespace PVA_Projekt
                 }
                 j++;
             }
+            for (int i = 0; i < rounds.Last().games.Count(); i++)
+            {
+                if (rounds.Last().games[i].player1.nickname == "" && rounds.Last().games[i].player2.nickname == "")
+                {
+                    rounds.Last().games.RemoveAt(i);
+                }
+            }
             ConsoleOutput.Clear();
             ConsoleOutput.Write($"{rounds.Last().number}. kolo - Zápasy:");
             ConsoleOutput.List(rounds.Last().games, points);
@@ -306,6 +313,7 @@ namespace PVA_Projekt
             while (true)
             {
                 ConsoleOutput.Write("Vyber zápas: ");
+                ConsoleOutput.Write("0 - Zpět");
                 ConsoleOutput.List(rounds.Last().games, points);
                 int input = ConsoleInput.InputInt(0, rounds.Last().games.Count);
                 if (input == 0) { break; }
@@ -649,7 +657,14 @@ namespace PVA_Projekt
 
                                 case "2":
                                     ConsoleOutput.Clear();
-                                    tournament.RemovePlayer();
+                                    if(tournament.rounds.Count == 0)
+                                    {
+                                        tournament.RemovePlayer();
+                                    }
+                                    else
+                                    {
+                                        ConsoleOutput.Write("Hráče nejde odhlásit po začátku kola");
+                                    }
                                     break;
 
                                 case "3":
@@ -687,7 +702,7 @@ namespace PVA_Projekt
                             ConsoleOutput.Write("Nebyl vytvořen žádný turnaj");
                             break;
                         }
-                        else if (seznam.players.Count == 0)
+                        else if (tournament.players.Count == 0)
                         {
                             ConsoleOutput.Write("Žádní přihlášení hráči");
                             break;
@@ -740,6 +755,7 @@ namespace PVA_Projekt
                         break;
 
                     default:
+                        ConsoleOutput.Clear();
                         ConsoleOutput.Write("Neplatná volba, zkus to znovu.");
                         break;
                 }
