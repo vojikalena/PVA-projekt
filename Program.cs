@@ -56,7 +56,6 @@ namespace PVA_Projekt
             }
         }
 
-
         public bool RemovePlayer(string nickname, List<Game> playedGames)
         {
             Player found = null;
@@ -339,11 +338,7 @@ namespace PVA_Projekt
             ConsoleOutput.Write("Uzavřít kolo? (a/n)");
             string input3 = ConsoleInput.InputText();
             if (input3 == "a")
-            {
-                CloseRound();
-            }
-            else
-            {   }
+            {CloseRound();}
         }
         public void CloseRound()
         {
@@ -512,17 +507,14 @@ namespace PVA_Projekt
             }
             else if (result == 1)
             {
-                // return "3:0";
                 return $"{points[0]}:0";
             }
             else if (result == 2)
             {
-                // return "0:3";
                 return $"0:{points[0]}";
             }
             else if (result == 3)
             {
-                //return "1:1";
                 return $"{points[1]}:{points[1]}";
             }
             else if (result == 4)
@@ -551,77 +543,15 @@ namespace PVA_Projekt
             }
         }
     }
-    /*
+    
     internal class Program
     {
         static void Main(string[] args)
         {
-            string saveFile = "tournament.trn";
-            Tournament tournament;
-
-            ConsoleOutput.Write("Načíst uložený turnaj? (a/n)");
-            string answer = ConsoleInput.Input();
-            if (answer.Trim().ToLower() == "a")
-            {
-                try
-                {
-                    tournament = TournamentStorage.Load(saveFile);
-                    ConsoleOutput.Write("Turnaj byl načten.");
-                }
-                catch (FileNotFoundException)
-                {
-                    ConsoleOutput.Write($"Soubor {saveFile} nebyl nalezen.");
-                    ConsoleOutput.Write("Chcete vytvořit nový turnaj? (a/n)");
-                    string newTournamentAnswer = ConsoleInput.Input();
-                    if (newTournamentAnswer.Trim().ToLower() == "a")
-                    {
-                        tournament = Tournament.Create();
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                catch (InvalidDataException e)
-                {
-                    ConsoleOutput.Write($"Soubor nelze načíst: {e.Message}");
-                    return;
-                }
-            }
-            else
-            {
-                tournament = Tournament.Create();
-            }
-
-            if (tournament.rounds.Count == 0 || !tournament.rounds.Last().opened)
-            {
-                tournament.NewRound();
-            }
-            tournament.SetResult();
-
-            try
-            {
-                TournamentStorage.Save(tournament, saveFile);
-                ConsoleOutput.Write($"Turnaj byl uložen do souboru {saveFile}.");
-            }
-            catch (IOException e)
-            {
-                ConsoleOutput.Write($"Turnaj se nepodařilo uložit: {e.Message}");
-            }
-            catch (InvalidOperationException e)
-            {
-                ConsoleOutput.Write($"Turnaj se nepodařilo uložit: {e.Message}");
-            }
-        }
-    }*/
-    internal class Program
-    {
-        static void Main(string[] args)
-        {
-            Players seznam = new Players();
-            List<Game> odehraneZapasy = new List<Game>();
+            Players seznam = new();
+            List<Game> odehraneZapasy = [];
             bool bezi = true;
-            Tournament tournament = new("", "", 0, [], [], []);
+            Tournament tournament = new("", "", 0, [], [], [3,1,2]);
             string saveFile = "tournament.trn";
             while (bezi)
             {
@@ -753,8 +683,10 @@ namespace PVA_Projekt
                                     ConsoleOutput.List(tournament.players);
                                     break;
 
+                                default:
+                                    ConsoleOutput.Write("Neplatná volba, zkus to znovu.");
+                                    break;
                             }
-
                         }
                         ConsoleOutput.Clear();
                         break;
@@ -774,11 +706,11 @@ namespace PVA_Projekt
 
                     case "0":
                         bezi = false;
-                        Console.WriteLine("Program se ukončuje.");
+                        ConsoleOutput.Write("Program se ukončuje.");
                         break;
 
                     default:
-                        Console.WriteLine("Neplatná volba, zkus to znovu.");
+                        ConsoleOutput.Write("Neplatná volba, zkus to znovu.");
                         break;
                 }
             }
