@@ -19,7 +19,6 @@ namespace PVA_Projekt
     {
         public List<Player> players = new List<Player>();
 
-
         public bool AddPlayer(string name, string nickname)
         {
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(nickname))
@@ -186,13 +185,11 @@ namespace PVA_Projekt
                 {
                     ConsoleOutput.Write("Hráč už je přihlášený");
                 }
-
             }
             else
             {
                 ConsoleOutput.Write("Hráč neexistuje");
             }
-
         }
         public void RemovePlayer()
         {
@@ -216,7 +213,6 @@ namespace PVA_Projekt
             {
                 ConsoleOutput.Write("Hráč neexistuje");
             }
-
         }
         public void NewRound()
         {
@@ -301,7 +297,6 @@ namespace PVA_Projekt
                     rounds.Last().games.Add(new(players[j], new("Volný los", "Volný los"), 4));
                 }
                 j++;
-
             }
             ConsoleOutput.Clear();
             ConsoleOutput.Write($"{rounds.Last().number}. kolo - Zápasy:");
@@ -338,27 +333,32 @@ namespace PVA_Projekt
                 }
                 rounds.Last().games[input - 1].result = input2;
                 ShowStandings();
-            }
+                
 
+            }
+            ConsoleOutput.Write("Uzavřít kolo? (a/n)");
+            string input3 = ConsoleInput.Input();
+            if (input3 == "a")
+            {
+                CloseRound();
+            }
+            else
+            {   }
         }
         public void CloseRound()
         {
-            while (true)
+            //while (true)
+            
+            foreach (Game g in rounds.Last().games)
             {
-                foreach (Game g in rounds.Last().games)
+                if (g.result == 0)
                 {
-                    if (g.result == 0)
-                    {
-                        ConsoleOutput.Write("Chybí výsledky zápasů");
-                        break;
-                    }
+                    ConsoleOutput.Write("Chybí výsledky zápasů");
+                    break;
                 }
-                rounds.Last().opened = false;
-                ConsoleOutput.Write("Kolo úspěšně uzavřeno");
-
             }
-
-
+            rounds.Last().opened = false;
+            ConsoleOutput.Write("Kolo úspěšně uzavřeno");            
         }
 
         public List<(Player player, int points, int played)> GetStandings()
@@ -416,7 +416,6 @@ namespace PVA_Projekt
                 if (int.TryParse(input, out int input2))
                 {
                     return input2;
-
                 }
                 else
                 {
@@ -613,7 +612,6 @@ namespace PVA_Projekt
             {
                 ConsoleOutput.Write($"Turnaj se nepodařilo uložit: {e.Message}");
             }
-
         }
     }*/
     internal class Program
@@ -628,17 +626,17 @@ namespace PVA_Projekt
             while (bezi)
             {
                 Console.WriteLine();
-                Console.WriteLine("=== MENU ===");
-                Console.WriteLine("1 - Přidat hráče");
-                Console.WriteLine("2 - Vypsat hráče");
-                Console.WriteLine("3 - Odebrat hráče");
-                Console.WriteLine("4 - Načíst/vytvořit turnaj");
-                Console.WriteLine("5 - Uložit turnaj");
-                Console.WriteLine("6 - Přihlásit/odhlásit hráče");
-                Console.WriteLine("7 - Zobrazit pořadí");
-                Console.WriteLine("8 - Vytvořit nové kolo");
-                Console.WriteLine("9 - Zapsat výsledky");
-                Console.WriteLine("0 - Konec");
+                ConsoleOutput.Write("=== MENU ===");
+                ConsoleOutput.Write("1 - Přidat hráče");
+                ConsoleOutput.Write("2 - Vypsat hráče");
+                ConsoleOutput.Write("3 - Odebrat hráče");
+                ConsoleOutput.Write("4 - Načíst/vytvořit turnaj");
+                ConsoleOutput.Write("5 - Uložit turnaj");
+                ConsoleOutput.Write("6 - Přihlásit/odhlásit hráče");
+                ConsoleOutput.Write("7 - Zobrazit pořadí");
+                ConsoleOutput.Write("8 - Vytvořit nové kolo");
+                ConsoleOutput.Write("9 - Zapsat výsledky");
+                ConsoleOutput.Write("0 - Konec");
                 Console.Write("Volba: ");
 
                 string volba = ConsoleInput.InputText();
@@ -668,7 +666,7 @@ namespace PVA_Projekt
 
                     case "4":
                         ConsoleOutput.Clear();
-                        Console.WriteLine("Nacist/vytvorit");
+                        ConsoleOutput.Write("Nacist/vytvorit");
                         //string saveFile = "tournament.trn";
                         //Tournament tournament;
 
