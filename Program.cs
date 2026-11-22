@@ -158,9 +158,9 @@ namespace PVA_Projekt
             string nickname = ConsoleInput.InputText();
             bool playerExists = false;
             string playerName = "";
-            foreach(Player p in seznam.players)
+            foreach (Player p in seznam.players)
             {
-                if(nickname == p.nickname)
+                if (nickname == p.nickname)
                 {
                     playerExists = true;
                     playerName = p.name;
@@ -169,9 +169,9 @@ namespace PVA_Projekt
             }
             if (playerExists)
             {
-                foreach(Player p in players)
+                foreach (Player p in players)
                 {
-                    if(nickname == p.nickname)
+                    if (nickname == p.nickname)
                     {
                         playerExists = false;
                     }
@@ -192,7 +192,7 @@ namespace PVA_Projekt
             {
                 ConsoleOutput.Write("Hráč neexistuje");
             }
-            
+
         }
         public void RemovePlayer()
         {
@@ -201,7 +201,7 @@ namespace PVA_Projekt
             bool playerExists = false;
             foreach (Player p in players)
             {
-                if(nickname == p.nickname)
+                if (nickname == p.nickname)
                 {
                     players.Remove(p);
                     playerExists = true;
@@ -229,6 +229,7 @@ namespace PVA_Projekt
                 else
                 {
                     ConsoleOutput.Write("Nelze vytvořit další kolo.");
+                    return;
                 }
             }
             catch (Exception e)
@@ -236,12 +237,12 @@ namespace PVA_Projekt
                 rounds.Add(new(rounds.Count + 1, [], true));
             }
 
-            for (int i = 0; i < (players.Count + 1) / 2; i++)
+            for (int i = 0; i < (players.Count ) / 2; i++)
             {
-                Player p1 = players[i * 2];
-                Player p2 = players[i * 2 + 1];
-                //rounds.Last().games.Add(new(new("",""), new("",""),0));
-                rounds.Last().games.Add(new(new(p1.nickname, p1.name), new(p2.nickname, p2.name), 0));
+                //Player p1 = players[i * 2];
+                //Player p2 = players[i * 2 + 1];
+                rounds.Last().games.Add(new(new("",""), new("",""),0));
+                //rounds.Last().games.Add(new(new(p1.nickname, p1.name), new(p2.nickname, p2.name), 0));
             }
             List<bool> playersRound = [];
             foreach (Player p in players)
@@ -302,6 +303,7 @@ namespace PVA_Projekt
                 j++;
 
             }
+            ConsoleOutput.Clear();
             ConsoleOutput.Write($"{rounds.Last().number}. kolo - Zápasy:");
             ConsoleOutput.List(rounds.Last().games, points);
         }
@@ -526,7 +528,7 @@ namespace PVA_Projekt
             }
             else if (result == 4)
             {
-                return "1:0";
+                return $"{points[2]}:0";
             }
             else { return "?"; }
         }
@@ -634,6 +636,8 @@ namespace PVA_Projekt
                 Console.WriteLine("5 - Uložit turnaj");
                 Console.WriteLine("6 - Přihlásit/odhlásit hráče");
                 Console.WriteLine("7 - Zobrazit pořadí");
+                Console.WriteLine("8 - Vytvořit nové kolo");
+                Console.WriteLine("9 - Zapsat výsledky");
                 Console.WriteLine("0 - Konec");
                 Console.Write("Volba: ");
 
@@ -642,6 +646,7 @@ namespace PVA_Projekt
                 switch (volba)
                 {
                     case "1":
+                        ConsoleOutput.Clear();
                         Console.Write("Jméno: ");
                         string jmeno = ConsoleInput.InputText();
                         Console.Write("Přezdívka: ");
@@ -650,16 +655,19 @@ namespace PVA_Projekt
                         break;
 
                     case "2":
+                        ConsoleOutput.Clear();
                         seznam.PrintPlayers();
                         break;
 
                     case "3":
+                        ConsoleOutput.Clear();
                         Console.Write("Přezdívka hráče k odebrání: ");
                         string odebrat = ConsoleInput.InputText();
                         seznam.RemovePlayer(odebrat, odehraneZapasy);
                         break;
 
                     case "4":
+                        ConsoleOutput.Clear();
                         Console.WriteLine("Nacist/vytvorit");
                         //string saveFile = "tournament.trn";
                         //Tournament tournament;
@@ -717,6 +725,7 @@ namespace PVA_Projekt
                         break;
 
                     case "6":
+                        ConsoleOutput.Clear();
                         bool quit = false;
                         while (!quit)
                         {
@@ -732,24 +741,37 @@ namespace PVA_Projekt
                                     break;
 
                                 case "1":
+                                    ConsoleOutput.Clear();
                                     tournament.AddPlayer(seznam);
                                     break;
 
                                 case "2":
+                                    ConsoleOutput.Clear();
                                     tournament.RemovePlayer();
                                     break;
 
                                 case "3":
+                                    ConsoleOutput.Clear();
                                     ConsoleOutput.List(tournament.players);
                                     break;
 
                             }
 
                         }
+                        ConsoleOutput.Clear();
                         break;
 
                     case "7":
                         tournament.ShowStandings();
+                        break;
+
+                    case "8":
+                        
+                        tournament.NewRound();
+                        break;
+
+                    case "9":
+                        tournament.SetResult();
                         break;
 
                     case "0":
