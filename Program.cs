@@ -337,7 +337,7 @@ namespace PVA_Projekt
 
             }
             ConsoleOutput.Write("Uzavřít kolo? (a/n)");
-            string input3 = ConsoleInput.Input();
+            string input3 = ConsoleInput.InputText();
             if (input3 == "a")
             {
                 CloseRound();
@@ -404,7 +404,7 @@ namespace PVA_Projekt
     }
     public class ConsoleInput
     {
-        public static string Input()
+        /*public static string Input()
         {
             return Console.ReadLine();
         }
@@ -423,7 +423,7 @@ namespace PVA_Projekt
                     continue;
                 }
             }
-        }
+        }*/
 
         // Přečte řádek; při konci vstupu (Ctrl+D / Ctrl+Z) program čistě skončí,
         // aby se nezacyklil.
